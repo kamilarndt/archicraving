@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model uzytkownicy {
+  id                Int              @id @default(autoincrement()) @map("id")
+  imie              String?          @map("imie")
+  nazwisko          String?          @map("nazwisko")
+  email             String           @unique @map("email")
+  haslo             String           @map("haslo")
+  rola_id           Int              @map("rola_id")
+  data_rejestracji  DateTime?        @map("data_rejestracji")
+  rola              role             @relation(fields: [rola_id], references: [id])
+  artykuly          artykuly[]       @relation("ArtykulyAutor")
+  produkty          produkty[]       @relation("ProduktyProducent")
+  zamowienia        zamowienia[]     @relation("ZamowieniaUzytkownik")
+  zlecenia_zleceniodawca zlecenia[]  @relation("ZleceniaZleceniodawca")
+  zlecenia_wykonawca    zlecenia[]   @relation("ZleceniaWykonawca")
+  projekty          projekty[]       @relation("ProjektyAutor")
+  producent_katalog  producentkatalog[] @relation("ProducentKatalogProducent")
+  podwykonawcy      podwykonawcy?
+  freelancerzy      freelancerzy?
+  @@map("uzytkownicy")
+}
+
+model role {
+  id    Int           @id @default(autoincrement()) @map("id")
+  nazwa String        @unique @map("nazwa")
+  uzytkownicy uzytkownicy[]
+  @@map("role")
+}
+
+model artykuly {
+  id            Int       @id @default(autoincrement()) @map("id")
+  tytul         String?   @map("tytul")
+  tresc         String?   @map("tresc")
+  data_publikacji DateTime? @map("data_publikacji")
+  autor_id      Int       @map("autor_id")
+  kategoria_id  Int       @map("kategoria_id")
+  autor         uzytkownicy @relation("ArtykulyAutor", fields: [autor_id], references: [id])
+  kategoria     kategorieartykulow @relation(fields: [kategoria_id], references: [id])
+  @@map("artykuly")
+  @@index([autor_id], name: "idx_artykuly_autor_id")
+  @@index([kategoria_id], name: "idx_artykuly_kategoria_id")
+}
+
+model kategorieartykulow {
+  id      Int        @id @default(autoincrement()) @map("id")
+  nazwa   String     @unique @map("nazwa")
+  artykuly artykuly[]
+  @@map("kategorieartykulow")
+}
+
+model produkty {
+  id            Int       @id @default(autoincrement()) @map("id")
+  nazwa         String?   @map("nazwa")
+  opis          String?   @map("opis")
+  producent_id  Int       @map("producent_id")
+  cena          Decimal?  @map("cena")
+  kategoria_id  Int       @map("kategoria_id")
+  data_dodania  DateTime? @map("data_dodania")
+  producent     uzytkownicy @relation("ProduktyProducent", fields: [producent_id], references: [id])
+  kategoria     kategorieproduktow @relation(fields: [kategoria_id], references: [id])
+  zamowienia    zamowienia[]       @relation("ZamowieniaProdukt")
+  @@map("produkty")
+  @@index([producent_id], name: "idx_produkty_producent_id")
+  @@index([kategoria_id], name: "idx_produkty_kategoria_id")
+}
+
+model kategorieproduktow {
+  id        Int        @id @default(autoincrement()) @map("id")
+  nazwa     String     @unique @map("nazwa")
+  produkty  produkty[]
+  @@map("kategorieproduktow")
+}
+
+model zamowienia {
+  id             Int       @id @default(autoincrement()) @map("id")
+  uzytkownik_id  Int       @map("uzytkownik_id")
+  produkt_id     Int       @map("produkt_id")
+  ilosc          Int?      @map("ilosc")
+  data_zamowienia DateTime? @map("data_zamowienia")
+  status_id      Int       @map("status_id")
+  uzytkownik     uzytkownicy @relation("ZamowieniaUzytkownik", fields: [uzytkownik_id], references: [id])
+  produkt        produkty    @relation("ZamowieniaProdukt", fields: [produkt_id], references: [id])
+  status        statusyzamowien @relation(fields: [status_id], references: [id])
+  @@map("zamowienia")
+  @@index([uzytkownik_id], name: "idx_zamowienia_uzytkownik_id")
+  @@index([produkt_id], name: "idx_zamowienia_produkt_id")
+  @@index([status_id], name: "idx_zamowienia_status_id")
+  @@index([uzytkownik_id, status_id], name: "idx_zamowienia_uzytkownik_status")
+}
+
+model statusyzamowien {
+  id         Int          @id @default(autoincrement()) @map("id")
+  nazwa      String       @unique @map("nazwa")
+  zamowienia zamowienia[]
+  @@map("statusyzamowien")
+}
+
+model zlecenia {
+  id              Int       @id @default(autoincrement()) @map("id")
+  tytul           String?   @map("tytul")
+  opis            String?   @map("opis")
+  zleceniodawca_id Int      @map("zleceniodawca_id")
+  wykonawca_id    Int       @map("wykonawca_id")
+  data_utworzenia DateTime? @map("data_utworzenia")
+  status_id       Int       @map("status_id")
+  typ_id          Int       @map("typ_id")
+  zleceniodawca   uzytkownicy @relation("ZleceniaZleceniodawca", fields: [zleceniodawca_id], references: [id])
+  wykonawca       uzytkownicy @relation("ZleceniaWykonawca", fields: [wykonawca_id], references: [id])
+  status          statusyzlecen @relation(fields: [status_id], references: [id])
+  typ             typyzlecen   @relation(fields: [typ_id], references: [id])
+  @@map("zlecenia")
+  @@index([zleceniodawca_id], name: "idx_zlecenia_zleceniodawca_id")
+  @@index([wykonawca_id], name: "idx_zlecenia_wykonawca_id")
+  @@index([status_id], name: "idx_zlecenia_status_id")
+  @@index([typ_id], name: "idx_zlecenia_typ_id")
+}
+
+model statusyzlecen {
+  id        Int        @id @default(autoincrement()) @map("id")
+  nazwa     String     @unique @map("nazwa")
+  zlecenia  zlecenia[]
+  @@map("statusyzlecen")
+}
+
+model typyzlecen {
+  id        Int        @id @default(autoincrement()) @map("id")
+  nazwa     String     @unique @map("nazwa")
+  zlecenia  zlecenia[]
+  @@map("typyzlecen")
+}
+
+model projekty {
+  id              Int       @id @default(autoincrement()) @map("id")
+  nazwa           String?   @map("nazwa")
+  opis            String?   @map("opis")
+  autor_id        Int       @map("autor_id")
+  data_utworzenia DateTime? @map("data_utworzenia")
+  status_id       Int       @map("status_id")
+  autor           uzytkownicy @relation("ProjektyAutor", fields: [autor_id], references: [id])
+  status          statusyprojektow @relation(fields: [status_id], references: [id])
+  @@map("projekty")
+  @@index([autor_id], name: "idx_projekty_autor_id")
+  @@index([status_id], name: "idx_projekty_status_id")
+}
+
+model statusyprojektow {
+  id        Int        @id @default(autoincrement()) @map("id")
+  nazwa     String     @unique @map("nazwa")
+  projekty  projekty[]
+  @@map("statusyprojektow")
+}
+
+model producentkatalog {
+  id           Int       @id @default(autoincrement()) @map("id")
+  producent_id Int       @map("producent_id")
+  opis         String?   @map("opis")
+  strona_www   String?   @map("strona_www")
+  kategoria_id Int       @map("kategoria_id")
+  producent    uzytkownicy @relation("ProducentKatalogProducent", fields: [producent_id], references: [id])
+  kategoria    kategorieproducentow @relation(fields: [kategoria_id], references: [id])
+  @@map("producentkatalog")
+  @@index([producent_id], name: "idx_producentkatalog_producent_id")
+  @@index([kategoria_id], name: "idx_producentkatalog_kategoria_id")
+}
+
+model kategorieproducentow {
+  id        Int        @id @default(autoincrement()) @map("id")
+  nazwa     String     @unique @map("nazwa")
+  producentkatalog producentkatalog[]
+  @@map("kategorieproducentow")
+}
+
+model podwykonawcy {
+  id             Int       @id @default(autoincrement()) @map("id")
+  uzytkownik_id  Int       @map("uzytkownik_id")
+  specjalizacja  String?   @map("specjalizacja")
+  opis           String?   @map("opis")
+  kontakt        String?   @map("kontakt")
+  uzytkownik     uzytkownicy @relation(fields: [uzytkownik_id], references: [id])
+  @@map("podwykonawcy")
+  @@unique([uzytkownik_id], name: "idx_podwykonawcy_uzytkownik_id")
+}
+
+model freelancerzy {
+  id             Int       @id @default(autoincrement()) @map("id")
+  uzytkownik_id  Int       @map("uzytkownik_id")
+  specjalizacja  String?   @map("specjalizacja")
+  opis           String?   @map("opis")
+  kontakt        String?   @map("kontakt")
+  uzytkownik     uzytkownicy @relation(fields: [uzytkownik_id], references: [id])
+  @@map("freelancerzy")
+  @@unique([uzytkownik_id], name: "idx_freelancerzy_uzytkownik_id")
+} 

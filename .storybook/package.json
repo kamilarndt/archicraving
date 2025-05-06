@@ -1,0 +1,20 @@
+{
+  "name": ".storybook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.8.0",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "@vitest/browser": "^3.1.3",
+    "playwright": "^1.52.0",
+    "vitest-browser-react": "^0.1.1"
+  }
+}

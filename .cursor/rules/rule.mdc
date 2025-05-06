@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- Generuj schemat Prisma z uwzględnieniem:
+  * Soft delete (deletedAt DateTime?)
+  * Automatyczne timestamps (createdAt/updatedAt)
+  * Relacje z onDelete: Cascade
+  * Enumy dla statusów zamówień
+

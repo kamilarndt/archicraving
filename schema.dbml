@@ -1,0 +1,121 @@
+Table Uzytkownicy {
+  id int [pk, increment]
+  imie varchar
+  nazwisko varchar
+  email varchar [unique]
+  haslo varchar
+  rola_id int [ref: > Role.id, index]
+  data_rejestracji datetime
+}
+
+Table Role {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Artykuly {
+  id int [pk, increment]
+  tytul varchar
+  tresc text
+  data_publikacji datetime
+  autor_id int [ref: > Uzytkownicy.id, index]
+  kategoria_id int [ref: > KategorieArtykulow.id, index]
+}
+
+Table KategorieArtykulow {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Produkty {
+  id int [pk, increment]
+  nazwa varchar
+  opis text
+  producent_id int [ref: > Uzytkownicy.id, index]
+  cena decimal
+  kategoria_id int [ref: > KategorieProduktow.id, index]
+  data_dodania datetime
+}
+
+Table KategorieProduktow {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Zamowienia {
+  id int [pk, increment]
+  uzytkownik_id int [ref: > Uzytkownicy.id, index]
+  produkt_id int [ref: > Produkty.id, index]
+  ilosc int
+  data_zamowienia datetime
+  status_id int [ref: > StatusyZamowien.id, index]
+}
+
+Table StatusyZamowien {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Zlecenia {
+  id int [pk, increment]
+  tytul varchar
+  opis text
+  zleceniodawca_id int [ref: > Uzytkownicy.id, index]
+  wykonawca_id int [ref: > Uzytkownicy.id, index]
+  data_utworzenia datetime
+  status_id int [ref: > StatusyZlecen.id, index]
+  typ_id int [ref: > TypyZlecen.id, index]
+}
+
+Table StatusyZlecen {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table TypyZlecen {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Projekty {
+  id int [pk, increment]
+  nazwa varchar
+  opis text
+  autor_id int [ref: > Uzytkownicy.id, index]
+  data_utworzenia datetime
+  status_id int [ref: > StatusyProjektow.id, index]
+}
+
+Table StatusyProjektow {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table ProducentKatalog {
+  id int [pk, increment]
+  producent_id int [ref: > Uzytkownicy.id, index]
+  opis text
+  strona_www varchar
+  kategoria_id int [ref: > KategorieProducentow.id, index]
+}
+
+Table KategorieProducentow {
+  id int [pk, increment]
+  nazwa varchar [unique]
+}
+
+Table Podwykonawcy {
+  id int [pk, increment]
+  uzytkownik_id int [ref: > Uzytkownicy.id, unique, index]
+  specjalizacja varchar
+  opis text
+  kontakt varchar
+}
+
+Table Freelancerzy {
+  id int [pk, increment]
+  uzytkownik_id int [ref: > Uzytkownicy.id, unique, index]
+  specjalizacja varchar
+  opis text
+  kontakt varchar
+}
