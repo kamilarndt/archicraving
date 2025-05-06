@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Always use Parameterized Queries
+- Prefer CTE over nested subqueries
+- Index all foreign keys
+- Use EXPLAIN ANALYZE for slow queries
+

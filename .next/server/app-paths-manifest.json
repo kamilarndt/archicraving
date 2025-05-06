@@ -1,0 +1,4 @@
+{
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/(public)/login/page": "app/(public)/login/page.js"
+}

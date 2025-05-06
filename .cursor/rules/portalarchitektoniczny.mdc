@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Portal architektoniczny
+- Preferuj React Server Components gdzie to możliwe
+- Używaj Tailwind dla stylowania
+- Preferuj indeksowanie tabel PostgreSQL dla kolumn używanych w WHERE/JOIN
+- Generuj kod w języku polskim (interfejs użytkownika)
+

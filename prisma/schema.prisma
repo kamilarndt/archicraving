@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -47,6 +48,8 @@ model artykuly {
   @@map("artykuly")
   @@index([autor_id], name: "idx_artykuly_autor_id")
   @@index([kategoria_id], name: "idx_artykuly_kategoria_id")
+  @@index([tytul], name: "idx_artykuly_tytul")
+  @@index([data_publikacji], name: "idx_artykuly_data_publikacji")
 }
 
 model kategorieartykulow {
@@ -70,6 +73,9 @@ model produkty {
   @@map("produkty")
   @@index([producent_id], name: "idx_produkty_producent_id")
   @@index([kategoria_id], name: "idx_produkty_kategoria_id")
+  @@index([nazwa], name: "idx_produkty_nazwa")
+  @@index([cena], name: "idx_produkty_cena")
+  @@index([data_dodania], name: "idx_produkty_data_dodania")
 }
 
 model kategorieproduktow {
@@ -121,6 +127,8 @@ model zlecenia {
   @@index([wykonawca_id], name: "idx_zlecenia_wykonawca_id")
   @@index([status_id], name: "idx_zlecenia_status_id")
   @@index([typ_id], name: "idx_zlecenia_typ_id")
+  @@index([tytul], name: "idx_zlecenia_tytul")
+  @@index([data_utworzenia], name: "idx_zlecenia_data_utworzenia")
 }
 
 model statusyzlecen {
@@ -149,6 +157,8 @@ model projekty {
   @@map("projekty")
   @@index([autor_id], name: "idx_projekty_autor_id")
   @@index([status_id], name: "idx_projekty_status_id")
+  @@index([nazwa], name: "idx_projekty_nazwa")
+  @@index([data_utworzenia], name: "idx_projekty_data_utworzenia")
 }
 
 model statusyprojektow {

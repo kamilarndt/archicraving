@@ -30,4 +30,10 @@ CREATE INDEX idx_producentkatalog_kategoria_id ON producentkatalog(kategoria_id)
 
 -- Podwykonawcy / Freelancerzy
 CREATE UNIQUE INDEX idx_podwykonawcy_uzytkownik_id ON podwykonawcy(uzytkownik_id);
-CREATE UNIQUE INDEX idx_freelancerzy_uzytkownik_id ON freelancerzy(uzytkownik_id); 
+CREATE UNIQUE INDEX idx_freelancerzy_uzytkownik_id ON freelancerzy(uzytkownik_id);
+
+-- Full-text search index for product names
+CREATE INDEX idx_produkty_nazwa_fulltext ON produkty USING gin (nazwa gin_trgm_ops);
+
+-- Full-text search index for project descriptions
+CREATE INDEX idx_projekty_opis_fulltext ON projekty USING gin (opis gin_trgm_ops); 
